@@ -1,6 +1,10 @@
+package uvg.edu.gt;
+
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Objects;
 
 class TreeNode {
     String key;
@@ -8,7 +12,7 @@ class TreeNode {
     TreeNode left, right;
 
     public TreeNode(String key, String value) {
-        this.key = key.toLowerCase(); // Convertir la clave a minúsculas para ignorar mayúsculas y minúsculas
+        this.key = key.toLowerCase();
         this.value = value;
         left = right = null;
     }
@@ -31,10 +35,8 @@ class BinarySearchTree {
             return root;
         }
 
-        // Insertar en el subárbol izquierdo si la clave es menor que la raíz
         if (key.compareTo(root.key) < 0)
             root.left = insertRec(root.left, key, value);
-        // Insertar en el subárbol derecho si la clave es mayor que la raíz
         else if (key.compareTo(root.key) > 0)
             root.right = insertRec(root.right, key, value);
 
@@ -54,21 +56,19 @@ class BinarySearchTree {
     }
 
     String translate(String word) {
-        return translateRec(root, word.toLowerCase()); // Convertir la palabra a minúsculas para buscar en el diccionario
+        return translateRec(root, word.toLowerCase());
     }
 
     String translateRec(TreeNode root, String word) {
         if (root == null)
-            return "*" + word + "*"; // Palabra no encontrada en el diccionario
+            return "*" + word + "*";
 
-        // Buscar en el subárbol izquierdo si la palabra es menor que la raíz
         if (word.compareTo(root.key) < 0)
             return translateRec(root.left, word);
-        // Buscar en el subárbol derecho si la palabra es mayor que la raíz
         else if (word.compareTo(root.key) > 0)
             return translateRec(root.right, word);
 
-        return root.value; // Palabra encontrada en el diccionario
+        return root.value;
     }
 }
 
@@ -76,12 +76,13 @@ public class Main {
     public static void main(String[] args) {
         BinarySearchTree dictionary = new BinarySearchTree();
 
-        // Leer el archivo diccionario.txt y construir el árbol binario de búsqueda
-        try (BufferedReader br = new BufferedReader(new FileReader("diccionario.txt"))) {
+        // Leer el archivo diccionario.txt desde recursos de Maven
+        try (InputStream inputStream = Main.class.getResourceAsStream("/diccionario.txt");
+             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                String key = parts[0].trim().substring(1).toLowerCase(); // Eliminar paréntesis y convertir a minúsculas
+                String key = parts[0].trim().substring(1).toLowerCase();
                 String value = parts[1].trim().substring(0, parts[1].trim().length() - 1);
                 dictionary.insert(key, value);
             }
@@ -89,13 +90,13 @@ public class Main {
             e.printStackTrace();
         }
 
-        // Imprimir el diccionario en orden In-order
         System.out.print("Diccionario ordenado: ");
         dictionary.inorder();
         System.out.println();
 
-        // Leer el archivo texto.txt y traducir cada palabra
-        try (BufferedReader br = new BufferedReader(new FileReader("texto.txt"))) {
+        // Leer el archivo texto.txt desde recursos de Maven
+        try (InputStream inputStream = Main.class.getResourceAsStream("/texto.txt");
+             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] words = line.split("\\s+");
