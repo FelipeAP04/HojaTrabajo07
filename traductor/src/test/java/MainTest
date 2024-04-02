@@ -1,0 +1,26 @@
+import org.junit.Before;
+import org.junit.Test;
+import uvg.edu.gt.*;
+import static org.junit.Assert.assertEquals;
+
+public class MainTest {
+
+    private BinarySearchTree dictionary;
+
+    @Before
+    public void setUp() {
+        dictionary = new BinarySearchTree();
+        dictionary.insert("apple", "manzana");
+        dictionary.insert("orange", "naranja");
+        dictionary.insert("banana", "plátano");
+    }
+
+    @Test
+    public void testTranslate() {
+        assertEquals("manzana", dictionary.translate("apple"));
+        assertEquals("naranja", dictionary.translate("orange"));
+        assertEquals("plátano", dictionary.translate("banana"));
+        assertEquals("*casa*", dictionary.translate("casa"));
+        assertEquals("*perro*", dictionary.translate("perro"));
+    }
+}
